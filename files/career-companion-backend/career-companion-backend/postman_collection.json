@@ -1,0 +1,249 @@
+{
+  "info": {
+    "name": "Career Companion API",
+    "description": "Production-ready Career Companion Backend API collection covering Authentication, Profile, Job Tracking, and Dashboard Analytics endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "b6f1a2e0-1c1a-4a4a-9a3e-career-companion-api"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "jobId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Passw0rd123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('token', data.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Passw0rd123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('token', data.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"headline\": \"Full Stack Developer\",\n  \"bio\": \"Passionate about building scalable web applications.\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Remote\",\n  \"skills\": [\"Node.js\", \"React\", \"MongoDB\"],\n  \"experienceYears\": 3,\n  \"links\": {\n    \"linkedin\": \"https://linkedin.com/in/johndoe\",\n    \"github\": \"https://github.com/johndoe\",\n    \"portfolio\": \"https://johndoe.dev\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/profile", "host": ["{{baseUrl}}"], "path": ["profile"] }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/profile", "host": ["{{baseUrl}}"], "path": ["profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"headline\": \"Senior Full Stack Developer\",\n  \"experienceYears\": 4\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/profile", "host": ["{{baseUrl}}"], "path": ["profile"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Add Job Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyName\": \"Acme Corp\",\n  \"jobTitle\": \"Backend Engineer\",\n  \"jobUrl\": \"https://acme.com/careers/123\",\n  \"location\": \"Remote\",\n  \"status\": \"Applied\",\n  \"salary\": \"$90,000 - $110,000\",\n  \"notes\": \"Referred by a friend\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/jobs", "host": ["{{baseUrl}}"], "path": ["jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('jobId', data.data.job._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Jobs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/jobs?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["jobs"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "Applied", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["jobs", "{{jobId}}"] }
+          }
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Had a great first call with the recruiter\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["jobs", "{{jobId}}"] }
+          }
+        },
+        {
+          "name": "Update Job Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Interview\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/jobs/{{jobId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["jobs", "{{jobId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["jobs", "{{jobId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/dashboard", "host": ["{{baseUrl}}"], "path": ["dashboard"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "API Health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Career Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🧭</span>
+      <span class="brand-name">Career<span>Companion</span></span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-user" id="navUser">👤 Loading...</span>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+    <button class="hamburger" id="hamburger">☰</button>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-menu" id="mobileMenu" style="display:none;">
+    <span class="nav-user" id="mobileUser">👤</span>
+    <button class="btn-logout" id="mobileLogoutBtn">Logout</button>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- STATS -->
+    <section class="stats-section">
+      <h2 class="section-title">Your Progress</h2>
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-number" id="totalApps">0</div>
+          <div class="stat-label">Total Applied</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number" id="interviewCount">0</div>
+          <div class="stat-label">Interviews</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-number" id="offerCount">0</div>
+          <div class="stat-label">Offers</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-number" id="rejectedCount">0</div>
+          <div class="stat-label">Rejected</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD JOB -->
+    <section class="add-job-section">
+      <div class="section-header">
+        <h2 class="section-title">Job Applications</h2>
+        <button class="btn-primary" id="toggleFormBtn" style="width:auto;padding:10px 22px;">+ Add Job</button>
+      </div>
+
+      <!-- FORM - hidden by default -->
+      <div id="addJobForm" style="display:none;" class="add-job-form">
+        <h3>Add New Application</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" id="companyName" placeholder="Google, TCS, Infosys..." />
+          </div>
+          <div class="form-group">
+            <label>Job Title *</label>
+            <input type="text" id="jobTitle" placeholder="Frontend Developer..." />
+          </div>
+          <div class="form-group">
+            <label>Job URL</label>
+            <input type="url" id="jobUrl" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="jobLocation" placeholder="Remote / Bangalore..." />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="jobStatus">
+              <option value="Applied">Applied</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Salary</label>
+            <input type="text" id="jobSalary" placeholder="₹6-8 LPA..." />
+          </div>
+          <div class="form-group full-width">
+            <label>Notes</label>
+            <textarea id="jobNotes" placeholder="Referral from friend..." rows="2"></textarea>
+          </div>
+        </div>
+        <div id="jobError" style="display:none;" class="error-msg"></div>
+        <div id="jobSuccess" style="display:none;" class="success-msg"></div>
+        <div class="form-actions">
+          <button class="btn-primary" id="saveJobBtn" style="width:auto;padding:11px 28px;">Save Application</button>
+          <button class="btn-secondary" id="cancelFormBtn">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <button class="filter-btn active" id="filterAll">All</button>
+      <button class="filter-btn" id="filterApplied">Applied</button>
+      <button class="filter-btn" id="filterInterview">Interview</button>
+      <button class="filter-btn" id="filterOffer">Offer</button>
+      <button class="filter-btn" id="filterRejected">Rejected</button>
+    </div>
+
+    <!-- JOBS -->
+    <section class="jobs-section">
+      <div id="loadingJobs" style="text-align:center;padding:40px;color:#9a9a9a;">⏳ Loading...</div>
+      <div id="emptyJobs" style="display:none;text-align:center;padding:60px 20px;color:#9a9a9a;">
+        <div style="font-size:3rem;margin-bottom:12px;">📭</div>
+        <p>No applications yet!</p>
+        <p>Click <strong>"+ Add Job"</strong> to start tracking.</p>
+      </div>
+      <div class="jobs-grid" id="jobsGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- STATUS MODAL -->
+  <div id="statusModal" style="display:none;" class="modal-overlay">
+    <div class="modal">
+      <h3>Update Status</h3>
+      <p id="modalCompany" style="color:#5a5a5a;font-size:0.9rem;margin-bottom:16px;"></p>
+      <select id="newStatus" style="width:100%;padding:11px 14px;border:1.5px solid #e0ddd5;border-radius:8px;font-size:0.95rem;margin-bottom:20px;outline:none;">
+        <option value="Applied">Applied</option>
+        <option value="Interview">Interview</option>
+        <option value="Offer">Offer</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn-primary" id="updateStatusBtn" style="width:auto;padding:11px 24px;">Update</button>
+        <button class="btn-secondary" id="cancelModalBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
